@@ -13,10 +13,10 @@ services:
       - config-data:/data/db
     command:
       [
-        "--configsrv",
+        "--configsvr",
         "--replSet",
         "config_server",
-        "--bind_api_all",
+        "--bind_ip_all",
         "--port",
         "27017"
       ]
@@ -108,8 +108,11 @@ services:
       - mongos_router
     ports:
       - 8080:8080
+    networks:
+      app-network:
+        ipv4_address: 173.17.0.15
     environment:
-      MONGODB_URL: "mongodb://mongos_router"
+      MONGODB_URL: "mongodb://mongos_router:27020"
       MONGODB_DATABASE_NAME: "somedb"
 
 networks:
