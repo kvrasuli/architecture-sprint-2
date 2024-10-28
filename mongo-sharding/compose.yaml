@@ -1,7 +1,7 @@
-version: '3'
+name: mongo-sharding
 services:
   configSrv:
-    image: dh-mirror.gitverse.ru/mongo:latest
+    image: mongo:latest
     container_name: configSrv
     restart: always
     ports:
