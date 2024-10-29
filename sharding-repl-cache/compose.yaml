@@ -15,6 +15,9 @@ services:
         "--port",
         "27017"
       ]
+    networks:
+      app-network:
+        ipv4_address: 173.17.0.12
     healthcheck:
       test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
       interval: 5s
@@ -35,6 +38,9 @@ services:
         "--port",
         "27017"
       ]
+    networks:
+      app-network:
+        ipv4_address: 173.17.0.2
     healthcheck:
       test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
       interval: 5s
@@ -55,6 +61,9 @@ services:
         "--port",
         "27017"
       ]
+    networks:
+      app-network:
+        ipv4_address: 173.17.0.3
     healthcheck:
       test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
       interval: 5s
@@ -75,6 +84,9 @@ services:
         "--port",
         "27017"
       ]
+    networks:
+      app-network:
+        ipv4_address: 173.17.0.4
     healthcheck:
       test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
       interval: 5s
@@ -95,6 +107,9 @@ services:
         "--port",
         "27017"
       ]
+    networks:
+      app-network:
+        ipv4_address: 173.17.0.5
     healthcheck:
       test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
       interval: 5s
@@ -115,6 +130,9 @@ services:
         "--port",
         "27017"
       ]
+    networks:
+      app-network:
+        ipv4_address: 173.17.0.6
     healthcheck:
       test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
       interval: 5s
@@ -135,6 +153,9 @@ services:
         "--port",
         "27017"
       ]
+    networks:
+      app-network:
+        ipv4_address: 173.17.0.7
     healthcheck:
       test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
       interval: 5s
@@ -153,6 +174,9 @@ services:
         "--port",
         "27017"
       ]
+    networks:
+      app-network:
+        ipv4_address: 173.17.0.8
     healthcheck:
       test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
       interval: 5s
@@ -162,26 +186,37 @@ services:
     image: redis:latest
     container_name: redis_cache
     restart: always
+    networks:
+      app-network:
+        ipv4_address: 173.17.0.19
     ports:
-      - "6379"
+      - "6379:6379"
     volumes:
       - redis_data:/data
 
   pymongo_api:
     container_name: pymongo_api
-    build:
-      context: api_app
-      dockerfile: Dockerfile
     image: kazhem/pymongo_api:1.0.0
     depends_on:
-      - mongos_router
       - redis_cache
+      - mongos_router
     ports:
-      - 8080:8080
+      - "8080:8080"
+    networks:
+      app-network:
+        ipv4_address: 173.17.0.10
     environment:
       MONGODB_URL: "mongodb://mongos_router:27017"
       MONGODB_DATABASE_NAME: "somedb"
       REDIS_URL: "redis://redis_cache:6379"
+
+networks:
+  app-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 173.17.0.0/16
 
 volumes:
   config-data:
