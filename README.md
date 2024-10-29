@@ -13,3 +13,5 @@ docker compose up -d
 ```shell
 ./mongo-init.sh
 ```
+
+Файл с итоговой схемой находится в репозитории
